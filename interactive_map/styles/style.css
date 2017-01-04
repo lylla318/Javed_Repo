@@ -184,6 +184,20 @@ li {
   margin-top: 80%;
   margin-left: 5%;
 }
+#colorButton {
+  width: 150px;
+  height: 25px;
+  margin-left: 15%;
+  border: 2px solid #ddd;
+  font-size: 12px;
+  padding-top: 10px;
+  text-align: center;
+  color: #A9A9A9;
+  cursor: pointer;
+}
+#colorButton:hover{
+  color: black;
+}
 
 
 

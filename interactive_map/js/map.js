@@ -1,14 +1,16 @@
 var sample_data = {"Germany":{"coauthors":440,"count":"eudeu"},"China":{"coauthors":325,"count":"aschn"},"United Kingdom":{"coauthors":291,"count":"eugbr"},"France":{"coauthors":224,"count":"eufra"},"South Korea":{"coauthors":216,"count":"askor"},"Taiwan":{"coauthors":145,"count":"astwn"},"Italy":{"coauthors":139,"count":"euita"},"Japan":{"coauthors":134,"count":"asjpn"},"Canada":{"coauthors":126,"count":"nacan"},"Switzerland":{"coauthors":123,"count":"euche"},"Australia":{"coauthors":120,"count":"ocaus"},"Netherlands":{"coauthors":114,"count":"eunld"},"Chile":{"coauthors":89,"count":"aschl"},"Greece":{"coauthors":75,"count":"eugrc"},"Spain":{"coauthors":75,"count":"euesp"},"Russia":{"coauthors":74,"count":"asrus"},"Singapore":{"coauthors":73,"count":"assgp"},"Denmark":{"coauthors":70,"count":"eudnk"},"Israel":{"coauthors":62,"count":"asisr"},"Czech Republic":{"coauthors":61,"count":"eucze"},"Argentina":{"coauthors":49,"count":"saarg"},"India":{"coauthors":48,"count":"asind"},"Saudi Arabia":{"coauthors":46,"count":"assau"},"Brazil":{"coauthors":41,"count":"sabra"},"Norway":{"coauthors":38,"count":"eunor"},"Belgium":{"coauthors":32,"count":"eubel"},"Peru":{"coauthors":24,"count":"saper"},"Slovenia":{"coauthors":22,"count":"eusvn"},"New Zealand":{"coauthors":21,"count":"ocnzl"},"Sweden":{"coauthors":18,"count":"euswe"},"Turkey":{"coauthors":18,"count":"astur"},"Austria":{"coauthors":16,"count":"euaut"},"Finland":{"coauthors":15,"count":"eufin"},"Mexico":{"coauthors":12,"count":"samex"},"Thailand":{"coauthors":12,"count":"astha"},"Malaysia":{"coauthors":9,"count":"asmys"},"Bolivia":{"coauthors":7,"count":"eubol"},"Colombia":{"coauthors":7,"count":"sacol"},"Uganda":{"coauthors":6,"count":"afuga"},"Iceland":{"coauthors":5,"count":"euisl"},"Panama":{"coauthors":5,"count":"napan"},"Portugal":{"coauthors":5,"count":"euprt"},"South Africa":{"coauthors":5,"count":"afzaf"},"Costa rica":{"coauthors":4,"count":"nacri"},"Ethiopia":{"coauthors":4,"count":"afeth"},"Ireland":{"coauthors":4,"count":"euirl"},"Lithuania":{"coauthors":4,"count":"eultu"},"Qatar":{"coauthors":4,"count":"asqat"},"Venezuela":{"coauthors":4,"count":"saven"},"Iran":{"coauthors":3,"count":"asirn"},"Morocco":{"coauthors":3,"count":"afmar"},"Algeria":{"coauthors":2,"count":"afdza"},"Cote Ivoire":{"coauthors":2,"count":"afciv"},"Hungary":{"coauthors":2,"count":"euhun"},"Indonesia":{"coauthors":2,"count":"asidn"},"Kenya":{"coauthors":2,"count":"afken"},"Libya":{"coauthors":2,"count":"aflby"},"Philippines":{"coauthors":2,"count":"asphl"},"Sri lanka":{"coauthors":2,"count":"aslka"},"Surinam":{"coauthors":2,"count":"sasur"},"Uruguay":{"coauthors":2,"count":"saury"},"Cameroon ":{"coauthors":1,"count":"afcmr"},"Croatia":{"coauthors":1,"count":"euhrv"},"Guatemala":{"coauthors":1,"count":"nagtm"},"Guinea":{"coauthors":1,"count":"afgin"},"Honduras":{"coauthors":1,"count":"nahnd"},"Lebanon":{"coauthors":1,"count":"aslbn"},"Mauritania":{"coauthors":1,"count":"afmrt"},"Nepal":{"coauthors":1,"count":"asnpl"},"Nicaragua":{"coauthors":1,"count":"nanic"},"Oman":{"coauthors":1,"count":"asomn"},"Poland":{"coauthors":1,"count":"eupol"},"Serbia":{"coauthors":1,"count":"eusrb"},"Sierra Leone":{"coauthors":1,"count":"afsle"},"Ukraine":{"coauthors":1,"count":"euukr"}};
 
-var selectColor = "#9999cc";
+var selectColor = "#9999cc",
 
-var current;
+    current, 
 
-var tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden");
+    currentColorScheme = "warm";
 
-var clicked = false;
+    tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden"),
 
-var noCoauthors = [];
+    clicked = false,
+
+    noCoauthors = [];
 
 for (var i=0 ; i < (Object.keys(sample_data)).length ; i++) {
   noCoauthors.push( sample_data[(Object.keys(sample_data))[i]].coauthors);
@@ -40,17 +42,70 @@ $(document).ready(function(){
             $("#rh-panel").removeClass("closed");
           }
       });
-
-
         event.preventDefault();
+    });
+
+    $("#colorButton").click(function(){
+      if(currentColorScheme == "cold") {
+        currentColorScheme = "warm";
+        colors = warmColorScheme;
+        colorMap = warmColorMap;
+      } else {
+        currentColorScheme = "cold";
+        colors = coldColorScheme;
+        colorMap = coldColorMap;
+      }
+
+      d3.selectAll(".ctry").style("fill", function(d){
+        if(sample_data[d.properties.name]) {
+          var numCoauthors = (sample_data[d.properties.name]).coauthors;
+          return getFill(numCoauthors, noCoauthors,colors);
+        } else {
+          return getFill(0, noCoauthors,colors);
+        }
+      });
+
+      $(".legend").remove();
+
+      var legend = z.selectAll(".legend")
+      .data(["0", "50", "100", "150", "200", "250", "300", "350", "351+"])
+      .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { 
+          return "translate(" + i * 2 + "0)"; })
+        .style("font", "8px sans-serif");
+
+      legend.append("rect")
+        .attr("class","legend-box")
+        .attr("x", width - 15)
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", function(d){ return colorMap[d]; });
+
+      legend.append("text")
+        .attr("x", width-10)
+        .attr("y", 30)
+        .attr("dy", ".35em")
+        .attr("text-anchor", "center")
+        .attr("class", "legend-text")
+        .style("fill", "#0A0A0A")
+        .text(function(d) { return d; });
+
     });
 });
 
-var colors = ['#fed976','#ffcc33','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026'];
+var colors = ['#fed976','#ffcc33','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026'],
 
-//var colorMap = {"0":"#ddd" ,"1 - 50":"#fed976", "51 - 100":"#ffcc33", "101 - 150":"#feb24c", "151 - 200":"#fd8d3c", "201 - 250":"#fc4e2a", "251 - 300":"#e31a1c", "301 - 350":"#bd0026", "351+":"#800026"};
+    warmColorScheme = ['#fed976','#ffcc33','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026'],
 
-var colorMap = {"0":"#ddd" ,"50":"#fed976", "100":"#ffcc33", "150":"#feb24c", "200":"#fd8d3c", "250":"#fc4e2a", "300":"#e31a1c", "350":"#bd0026", "351+":"#800026"};
+    coldColorScheme = ['#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
+
+var colorMap = {"0":"#ddd" ,"50":"#fed976", "100":"#ffcc33", "150":"#feb24c", "200":"#fd8d3c", "250":"#fc4e2a", "300":"#e31a1c", "350":"#bd0026", "351+":"#800026"},
+
+    warmColorMap = {"0":"#ddd" ,"50":"#fed976", "100":"#ffcc33", "150":"#feb24c", "200":"#fd8d3c", "250":"#fc4e2a", "300":"#e31a1c", "350":"#bd0026", "351+":"#800026"},
+
+    coldColorMap = {"0":"#ddd" ,"50":"#e0f3db", "100":"#ccebc5", "150":"#a8ddb5", "200":"#7bccc4", "250":"#4eb3d3", "300":"#2b8cbe", "350":"#0868ac", "351+":"#084081"};
+
 
 var m_width = $("#map").width(),
   width = 938,
@@ -59,7 +114,7 @@ var m_width = $("#map").width(),
   state;
 
 var colorBarWidth = 250,
-    colorBarHeight = 250;
+    colorBarHeight = 100;
 
 var projection = d3.geo.mercator()
   .scale(130)
@@ -97,7 +152,6 @@ var offsetL = document.getElementById('map').offsetLeft+(width/2)-300;
 var offsetT = document.getElementById('map').offsetTop+(height/2)-130;
 
 var legend = z.selectAll(".legend")
-//.data(["0", "1 - 50", "51 - 100", "101 - 150", "151 - 200", "201 - 250", "251 - 300", "301 - 350", "351+"])
 .data(["0", "50", "100", "150", "200", "250", "300", "350", "351+"])
 .enter().append("g")
   .attr("class", "legend")
@@ -106,6 +160,7 @@ var legend = z.selectAll(".legend")
   .style("font", "8px sans-serif");
 
 legend.append("rect")
+  .attr("class","legend-box")
   .attr("x", width - 15)
   .attr("width", 20)
   .attr("height", 20)
@@ -137,9 +192,6 @@ d3.json("json/countries.topo.json", function(error, us) {
     .attr("class", "ctry")
     .attr("d", path)
     .style("fill", function(d, i) {
-        /*if(name && name==d.properties.name) {
-          return selectColor;
-        }*/
         if(sample_data[d.properties.name]) {
           var numCoauthors = (sample_data[d.properties.name]).coauthors;
           return getFill(numCoauthors, noCoauthors,colors);
@@ -345,7 +397,6 @@ function getCoauthors(name) {
 
 function getFill(num, arr, colors) {
   var range = (arr[arr.length-1] / colors.length);
-  console.log(range);
   if(num == 0) {return "#ddd"; }
   if(num >= 0 && num <= range) { return colors[0]; }
   for (var i = 1 ; i < (parseInt(range) + 1) ; i++) {

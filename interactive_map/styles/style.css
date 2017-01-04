@@ -1,3 +1,6 @@
+html {
+  font-family: sans-serif;
+}
 #map {
 /*background-color: #fff;
 border: 1px solid #ccc;*/
@@ -118,12 +121,13 @@ li {
   color: #ddd;
 }
 #rh-panel-header {
+  margin-left: 10px;
   padding: 5px;
   background: #222;
   color: #ddd;
 }
 #rh-panel-header hr {
- margin: 0;
+ margin-top: -5;
  border-style: none;
  height: 3px;
  width: 100%;
@@ -146,8 +150,6 @@ li {
   background: #222;
   color: #ddd;
 }
-
-
 #article-info {
   padding: 10px;
   margin-left: 10px;
@@ -165,7 +167,7 @@ li {
   list-style: none;
 }
 .toggle-icon{
-  float:right;
+  float:left;
   padding-right:10px;
   cursor:pointer;
 }

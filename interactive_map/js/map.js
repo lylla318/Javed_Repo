@@ -23,13 +23,13 @@ $(document).ready(function(){
           /* If rh-panel is open, minimize it. */
           if(!($("#rh-panel").hasClass("closed"))){
             $("#rh-panel").empty();
-            $("#rh-panel").append("<div id='rh-panel-header'>" + "<h4><i class='fa fa-bars toggle-icon'></i></h4><br>" + "</div>");
+            $("#rh-panel").append("<div id='rh-panel-header'>" + "<h3><i class='fa fa-bars toggle-icon'></i><br></h3><br>" + "</div>");
             $("#rh-panel").animate({"width": "50px"},500);
             $("#rh-panel").addClass("closed");
           }
           /* Enlarge the rh-panel */
           else {
-            d3.json("data/external-2016-11-4.json", function(error, results) {
+            d3.json("data/external-2017-1-3.json", function(error, results) {
               getAuthorData(results, current);
             });
             $("#rh-panel").animate({"width": "250px"},500);
@@ -254,7 +254,7 @@ $(window).resize(function() {
 function getAuthorData(results,ctry) {
   $("#rh-panel").empty();
   $("#rh-panel").css({"width":"250px"})
-  $("#rh-panel").append("<div id='rh-panel-header'>" + "<h3> <span style='color:orange' id='country-selected'>" + current + "</span> <i class='fa fa-bars toggle-icon'></i></h3><br><hr></div>");
+  $("#rh-panel").append("<div id='rh-panel-header'>" + "<h3><i class='fa fa-bars toggle-icon'></i><span style='color:orange' id='country-selected'>" + current + "</span><br><hr></h3></div>");
   var authors,
   count = 0,
   latestPublicationYear = 0,
@@ -323,7 +323,7 @@ function getCoauthors(name) {
 function getFill(num, arr, colors) {
   var range = (arr[arr.length-1] / colors.length);
   console.log(range);
-  if(num == 0) {return "#FFEC8B"; }
+  if(num == 0) {return "#ddd"; }
   if(num >= 0 && num <= range) { return colors[0]; }
   for (var i = 1 ; i < (parseInt(range) + 1) ; i++) {
     if (num >= (range * i) && num <= (range * (i + 1))) { return colors[i]; }

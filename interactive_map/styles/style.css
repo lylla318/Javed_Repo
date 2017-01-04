@@ -1,3 +1,37 @@
+#map {
+/*background-color: #fff;
+border: 1px solid #ccc;*/
+margin-left: 11%;
+margin-right: 0%;
+margin-top: 6%;
+}
+.background {
+fill: none;
+pointer-events: all;
+}
+#countries, #states {
+fill: #cde;
+stroke: #fff;
+stroke-linejoin: round;
+stroke-linecap: round;
+}
+#countries .active, #states .active {
+fill: #89a;
+}
+#cities {
+stroke-width: 0;
+}
+.city {
+fill: #345;
+stroke: #fff;
+}
+pre.prettyprint {
+border: 1px solid #ccc;
+margin-bottom: 0;
+padding: 9.5px;
+}
+
+
 
 .country:hover{
   stroke: #fff;
@@ -72,31 +106,48 @@ li {
   padding: 0;
   margin-bottom:0;
 }
-#panel {
-  width: 200px;
+#rh-panel {
+  width: 250px;
   height: 500px;
+  opacity: 0.7;
   background: #222;
-  margin-top: -550px;
+  margin-top: -670px;
   float: right;
   overflow: scroll;
   padding: 10px;
   color: #ddd;
 }
-/*#panel .closed {
-  width: 50px;
-  height: 500px;
-  background: #222;
-  margin-top: -500px;
-  float: right;
-  overflow: scroll;
-  padding: 10px;
-  color: #ddd;
-}*/
-#panel-header {
+#rh-panel-header {
   padding: 5px;
   background: #222;
   color: #ddd;
 }
+#rh-panel-header hr {
+ margin: 0;
+ border-style: none;
+ height: 3px;
+ width: 100%;
+ background-color: #ddd;
+}
+
+#lh-panel {
+  width: 250px;
+  height: 500px;
+  opacity: 0.6;
+  background: #222;
+  margin-top: -670px;
+  float: left;
+  overflow: scroll;
+  padding: 10px;
+  color: #ddd;
+}
+#lh-panel-header {
+  padding: 5px;
+  background: #222;
+  color: #ddd;
+}
+
+
 #article-info {
   padding: 10px;
   margin-left: 10px;

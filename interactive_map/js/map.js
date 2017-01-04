@@ -208,7 +208,7 @@ function country_clicked(d) {
     d3.selectAll(".clicked").classed("clicked", false);
     d3.select(this).classed("clicked", true);
     current = d.properties.name;
-    d3.json("data/external-2016-11-4.json", function(error, results) {
+    d3.json("data/external-2017-1-3.json", function(error, results) {
       getAuthorData(results, d.properties.name);
     });
     $("#rh-panel").show();
@@ -274,11 +274,11 @@ function getAuthorData(results,ctry) {
         } else {
           authorCount[(authors[j]).authorName] = 1; 
         }
-        var parsedInstitution = getInstitution(authors[j].authorAffiliation)
-        if(institutionCount[parsedInstitution]) {
-          institutionCount[parsedInstitution] = institutionCount[parsedInstitution] + 1; 
+        var institution = (authors[j]).authorAffiliation;
+        if(institutionCount[institution]) {
+          institutionCount[institution] = institutionCount[institution] + 1; 
         } else {
-          institutionCount[parsedInstitution] = 1; 
+          institutionCount[institution] = 1; 
         }
       }
     }
@@ -291,16 +291,16 @@ function getAuthorData(results,ctry) {
   }
   if(count > 0){
     $("#rh-panel").append("<div id='article-info'>"
-      + "<h8>COAUTHORSHIPS<br><br></h8><ul><li>Total: " + getCoauthors(ctry) + "</li></ul>"
+      + "<h8>COAUTHORSHIPS<br><br></h8><ul><li>Total: <span id='count'>" + getCoauthors(ctry) + "</span></li></ul>"
       + "</div>"
       + "<div id='article-info'>"
-      + "<h8>Top 3 External Organizations<br><br></h8><ul><li>" + (Object.keys(institutionCount))[0] + ": " + institutionCount[(Object.keys(institutionCount))[0]] + "</li><li>" + (Object.keys(institutionCount))[1] + ": " + institutionCount[(Object.keys(institutionCount))[1]] + "</li><li>" + (Object.keys(institutionCount))[2] + ": " + institutionCount[(Object.keys(institutionCount))[2]] + "</li></ul>"
+      + "<h8>Top 3 External Organizations<br><br></h8><ul><li>" + (Object.keys(institutionCount))[0] + " <span id='count'>" + institutionCount[(Object.keys(institutionCount))[0]] + "</span></li><li>" + (Object.keys(institutionCount))[1] + " <span id='count'>" + institutionCount[(Object.keys(institutionCount))[1]] + "</span></li><li>" + (Object.keys(institutionCount))[2] + " <span id='count'>" + institutionCount[(Object.keys(institutionCount))[2]] + "</span></li></ul>"
       + "</div>"
       + "<div id='article-info'>"
-      + "<h8>Top 3 Cornell Authors<br><br></h8><ul><li>" + (Object.keys(authorCount))[0] + "</li><li>" + (Object.keys(authorCount))[1] + "</li><li>" + (Object.keys(authorCount))[2] + "</li></ul>"
+      + "<h8>Top 3 Cornell Authors<br><br></h8><ul><li>" + (Object.keys(authorCount))[0] + " <span id='count'>" + authorCount[(Object.keys(authorCount))[0]] + "</span></li><li>" + (Object.keys(authorCount))[1] + " <span id='count'>" + authorCount[(Object.keys(authorCount))[1]] + "</span><li>" + (Object.keys(authorCount))[2] + " <span id='count'>" + authorCount[(Object.keys(authorCount))[2]] + "</span></li></ul>"
       + "</div>"
       + "<div id='article-info'>"
-      + "<h8>Last Co-authorship Year:   " + latestPublicationYear + " </h8>"
+      + "<h8>Last Co-authorship Year: <span id='count'>" + latestPublicationYear + "</span></h8>"
       + "</div>");
   }
   if(count == 0) {

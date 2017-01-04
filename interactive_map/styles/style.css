@@ -171,5 +171,8 @@ li {
   padding-right:10px;
   cursor:pointer;
 }
+#count {
+  float: right;
+}
 
 

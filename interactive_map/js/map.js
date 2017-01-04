@@ -1,7 +1,5 @@
 var sample_data = {"Germany":{"coauthors":440,"count":"eudeu"},"China":{"coauthors":325,"count":"aschn"},"United Kingdom":{"coauthors":291,"count":"eugbr"},"France":{"coauthors":224,"count":"eufra"},"South Korea":{"coauthors":216,"count":"askor"},"Taiwan":{"coauthors":145,"count":"astwn"},"Italy":{"coauthors":139,"count":"euita"},"Japan":{"coauthors":134,"count":"asjpn"},"Canada":{"coauthors":126,"count":"nacan"},"Switzerland":{"coauthors":123,"count":"euche"},"Australia":{"coauthors":120,"count":"ocaus"},"Netherlands":{"coauthors":114,"count":"eunld"},"Chile":{"coauthors":89,"count":"aschl"},"Greece":{"coauthors":75,"count":"eugrc"},"Spain":{"coauthors":75,"count":"euesp"},"Russia":{"coauthors":74,"count":"asrus"},"Singapore":{"coauthors":73,"count":"assgp"},"Denmark":{"coauthors":70,"count":"eudnk"},"Israel":{"coauthors":62,"count":"asisr"},"Czech Republic":{"coauthors":61,"count":"eucze"},"Argentina":{"coauthors":49,"count":"saarg"},"India":{"coauthors":48,"count":"asind"},"Saudi Arabia":{"coauthors":46,"count":"assau"},"Brazil":{"coauthors":41,"count":"sabra"},"Norway":{"coauthors":38,"count":"eunor"},"Belgium":{"coauthors":32,"count":"eubel"},"Peru":{"coauthors":24,"count":"saper"},"Slovenia":{"coauthors":22,"count":"eusvn"},"New Zealand":{"coauthors":21,"count":"ocnzl"},"Sweden":{"coauthors":18,"count":"euswe"},"Turkey":{"coauthors":18,"count":"astur"},"Austria":{"coauthors":16,"count":"euaut"},"Finland":{"coauthors":15,"count":"eufin"},"Mexico":{"coauthors":12,"count":"samex"},"Thailand":{"coauthors":12,"count":"astha"},"Malaysia":{"coauthors":9,"count":"asmys"},"Bolivia":{"coauthors":7,"count":"eubol"},"Colombia":{"coauthors":7,"count":"sacol"},"Uganda":{"coauthors":6,"count":"afuga"},"Iceland":{"coauthors":5,"count":"euisl"},"Panama":{"coauthors":5,"count":"napan"},"Portugal":{"coauthors":5,"count":"euprt"},"South Africa":{"coauthors":5,"count":"afzaf"},"Costa rica":{"coauthors":4,"count":"nacri"},"Ethiopia":{"coauthors":4,"count":"afeth"},"Ireland":{"coauthors":4,"count":"euirl"},"Lithuania":{"coauthors":4,"count":"eultu"},"Qatar":{"coauthors":4,"count":"asqat"},"Venezuela":{"coauthors":4,"count":"saven"},"Iran":{"coauthors":3,"count":"asirn"},"Morocco":{"coauthors":3,"count":"afmar"},"Algeria":{"coauthors":2,"count":"afdza"},"Cote Ivoire":{"coauthors":2,"count":"afciv"},"Hungary":{"coauthors":2,"count":"euhun"},"Indonesia":{"coauthors":2,"count":"asidn"},"Kenya":{"coauthors":2,"count":"afken"},"Libya":{"coauthors":2,"count":"aflby"},"Philippines":{"coauthors":2,"count":"asphl"},"Sri lanka":{"coauthors":2,"count":"aslka"},"Surinam":{"coauthors":2,"count":"sasur"},"Uruguay":{"coauthors":2,"count":"saury"},"Cameroon ":{"coauthors":1,"count":"afcmr"},"Croatia":{"coauthors":1,"count":"euhrv"},"Guatemala":{"coauthors":1,"count":"nagtm"},"Guinea":{"coauthors":1,"count":"afgin"},"Honduras":{"coauthors":1,"count":"nahnd"},"Lebanon":{"coauthors":1,"count":"aslbn"},"Mauritania":{"coauthors":1,"count":"afmrt"},"Nepal":{"coauthors":1,"count":"asnpl"},"Nicaragua":{"coauthors":1,"count":"nanic"},"Oman":{"coauthors":1,"count":"asomn"},"Poland":{"coauthors":1,"count":"eupol"},"Serbia":{"coauthors":1,"count":"eusrb"},"Sierra Leone":{"coauthors":1,"count":"afsle"},"Ukraine":{"coauthors":1,"count":"euukr"}};
 
-var noCoauthors = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,114,12,12,120,123,126,134,139,145,15,16,18,18,2,2,2,2,2,2,2,2,2,2,21,216,22,224,24,291,3,3,32,325,38,4,4,4,4,4,4,41,440,46,48,49,5,5,5,5,6,61,62,7,7,70,73,74,75,75,89,9];
-
 var selectColor = "#9999cc";
 
 var current;
@@ -9,6 +7,12 @@ var current;
 var tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden");
 
 var clicked = false;
+
+var noCoauthors = [];
+
+for (var i=0 ; i < (Object.keys(sample_data)).length ; i++) {
+  noCoauthors.push( sample_data[(Object.keys(sample_data))[i]].coauthors);
+}
 
 noCoauthors.sort(function(a, b){return a-b});
 
@@ -23,7 +27,7 @@ $(document).ready(function(){
           /* If rh-panel is open, minimize it. */
           if(!($("#rh-panel").hasClass("closed"))){
             $("#rh-panel").empty();
-            $("#rh-panel").append("<div id='rh-panel-header'>" + "<h3><i class='fa fa-bars toggle-icon'></i><br></h3><br>" + "</div>");
+            $("#rh-panel").append("<div id='rh-panel-header'>" + "<h3 style='padding-left:25%'><span style='margin-left:10%'><i class='fa fa-bars toggle-icon'></i><br></h3><br>" + "</div>");
             $("#rh-panel").animate({"width": "50px"},500);
             $("#rh-panel").addClass("closed");
           }
@@ -44,64 +48,83 @@ $(document).ready(function(){
 
 var colors = ['#fed976','#ffcc33','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026'];
 
-var colorMap = {"0":"#fed976", "1 - 50":"#ffcc33", "51 - 100":"#feb24c", "101 - 150":"#fd8d3c", "151 - 200":"#fc4e2a", "201 - 250":"#e31a1c", "251 - 300":"#bd0026", "300 +":"#800026"};
+//var colorMap = {"0":"#ddd" ,"1 - 50":"#fed976", "51 - 100":"#ffcc33", "101 - 150":"#feb24c", "151 - 200":"#fd8d3c", "201 - 250":"#fc4e2a", "251 - 300":"#e31a1c", "301 - 350":"#bd0026", "351+":"#800026"};
+
+var colorMap = {"0":"#ddd" ,"50":"#fed976", "100":"#ffcc33", "150":"#feb24c", "200":"#fd8d3c", "250":"#fc4e2a", "300":"#e31a1c", "350":"#bd0026", "351+":"#800026"};
 
 var m_width = $("#map").width(),
-    width = 938,
-    height = 500,
-    country,
-    state;
+  width = 938,
+  height = 500,
+  country,
+  state;
+
+var colorBarWidth = 250,
+    colorBarHeight = 250;
 
 var projection = d3.geo.mercator()
-    .scale(130)
-    .translate([(width / 2)+30, height / 1.5]);
+  .scale(130)
+  .translate([(width / 2)+30, height / 1.5]);
 
 var path = d3.geo.path()
-    .projection(projection);
+  .projection(projection);
 
 var svg = d3.select("#map").append("svg")
-    .attr("preserveAspectRatio", "xMidYMid")
-    .attr("viewBox", "0 0 " + width + " " + height)
-    .attr("width", m_width)
-    .attr("height", m_width * height / width);
+  .attr("preserveAspectRatio", "xMidYMid")
+  .attr("viewBox", "0 0 " + width + " " + height)
+  .attr("width", m_width)
+  .attr("height", m_width * height / width);
 
 svg.append("rect")
-    .attr("class", "background")
-    .attr("id", "background")
-    .attr("width", width)
-    .attr("height", height)
-    .on("click", country_clicked);
+  .attr("class", "background")
+  .attr("id", "background")
+  .attr("width", width)
+  .attr("height", height)
+  .on("click", country_clicked);
+
+var colorBar = d3.select("#colorBar").append("svg")
+  .attr("width", colorBarWidth)
+  .attr("height", colorBarHeight);
+
 
 var g = svg.append("g");
 
-var z = svg.append("g").attr("transform", "translate(" + (-770) + "," + 350 + ")");
+//var z = svg.append("g").attr("transform", "translate(" + (-770) + "," + 350 + ")");
+
+var z = colorBar.append("g").attr("transform", "translate(" + (-900) + "," + 50 + ")");
 
 var offsetL = document.getElementById('map').offsetLeft+(width/2)-300;
 
 var offsetT = document.getElementById('map').offsetTop+(height/2)-130;
 
 var legend = z.selectAll(".legend")
-.data(["0", "1 - 50", "51 - 100", "101 - 150", "151 - 200", "201 - 250", "251 - 300", "301+"])
+//.data(["0", "1 - 50", "51 - 100", "101 - 150", "151 - 200", "201 - 250", "251 - 300", "301 - 350", "351+"])
+.data(["0", "50", "100", "150", "200", "250", "300", "350", "351+"])
 .enter().append("g")
   .attr("class", "legend")
   .attr("transform", function(d, i) { 
-    return "translate(0," + i * 14 + ")"; })
+    return "translate(" + i * 2 + "0)"; })
   .style("font", "8px sans-serif");
 
 legend.append("rect")
   .attr("x", width - 15)
-  .attr("width", 10)
-  .attr("height", 10)
+  .attr("width", 20)
+  .attr("height", 20)
   .attr("fill", function(d){ return colorMap[d]; });
 
 legend.append("text")
-  .attr("x", width + 5)
-  .attr("y", 5)
+  .attr("x", width-10)
+  .attr("y", 30)
   .attr("dy", ".35em")
-  .attr("text-anchor", "start")
+  .attr("text-anchor", "center")
   .attr("class", "legend-text")
   .style("fill", "#0A0A0A")
   .text(function(d) { return d; });
+
+colorBar.append("text")
+    .attr("x", 25)
+    .attr("y", 20)
+    .attr("dy", ".35em")
+    .text("Color Scheme");
 
 d3.json("json/countries.topo.json", function(error, us) {
   g.append("g")

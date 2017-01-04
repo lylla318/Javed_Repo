@@ -1,6 +1,9 @@
 html {
   font-family: sans-serif;
 }
+h3 {
+  font-size: 25px;
+}
 #map {
 /*background-color: #fff;
 border: 1px solid #ccc;*/
@@ -111,7 +114,7 @@ li {
 }
 #rh-panel {
   width: 250px;
-  height: 500px;
+  height: 550px;
   opacity: 0.7;
   background: #222;
   margin-top: -670px;
@@ -121,7 +124,8 @@ li {
   color: #ddd;
 }
 #rh-panel-header {
-  margin-left: 10px;
+  margin-left: -5px;
+  margin-top: -10%;
   padding: 5px;
   background: #222;
   color: #ddd;
@@ -129,16 +133,18 @@ li {
 #rh-panel-header hr {
  margin-top: -5;
  border-style: none;
- height: 3px;
+ height: 2px;
  width: 100%;
  background-color: #ddd;
+}
+#rh-panel li {
+ font-family: serif;
+ text-decoration: underline;
 }
 
 #lh-panel {
   width: 250px;
   height: 500px;
-  opacity: 0.6;
-  background: #222;
   margin-top: -670px;
   float: left;
   overflow: scroll;
@@ -147,7 +153,7 @@ li {
 }
 #lh-panel-header {
   padding: 5px;
-  background: #222;
+  /*background: #222;*/
   color: #ddd;
 }
 #article-info {
@@ -174,5 +180,10 @@ li {
 #count {
   float: right;
 }
+#colorBar {
+  margin-top: 80%;
+  margin-left: 5%;
+}
+
 
 

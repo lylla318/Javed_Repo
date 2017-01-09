@@ -22,27 +22,25 @@ $(document).ready(function(){
 
     $("#rh-panel").hide();
 
-    $("#rh-panel").click(function(event){
-
-        $("#rh-panel-header").click(function(e){
-          e.preventDefault();
-          /* If rh-panel is open, minimize it. */
-          if(!($("#rh-panel").hasClass("closed"))){
-            $("#rh-panel").empty();
-            $("#rh-panel").append("<div id='rh-panel-header'>" + "<h3 style='padding-left:25%'><span style='margin-left:10%'><i class='fa fa-bars toggle-icon'></i><br></h3><br>" + "</div>");
-            $("#rh-panel").animate({"width": "50px"},500);
-            $("#rh-panel").addClass("closed");
-          }
-          /* Enlarge the rh-panel */
-          else {
-            d3.json("data/external-2017-1-3.json", function(error, results) {
-              getAuthorData(results, current);
-            });
-            $("#rh-panel").animate({"width": "250px"},500);
-            $("#rh-panel").removeClass("closed");
-          }
-      });
-        event.preventDefault();
+    $("#rh-panel").click(function(e){
+      console.log("hi");
+      e.preventDefault();
+      /* If rh-panel is open, minimize it. */
+      if(!($("#rh-panel").hasClass("closed"))){
+        $("#rh-panel").empty();
+        $("#rh-panel").append("<div id='rh-panel-header-closed'><h3><i class='fa fa-bars toggle-icon'></i></h3></div>");
+        $("#rh-panel").animate({"width": "50px"},500);
+        $("#rh-panel").addClass("closed");
+      }
+      /* Enlarge the rh-panel */
+      else {
+        console.log("bi");
+        d3.json("data/external-2017-1-3.json", function(error, results) {
+          getAuthorData(results, current);
+        });
+        $("#rh-panel").animate({"width": "250px"},500);
+        $("#rh-panel").removeClass("closed");
+      }
     });
 
     $("#colorButton").click(function(){
@@ -113,7 +111,7 @@ var m_width = $("#map").width(),
   country,
   state;
 
-var colorBarWidth = 250,
+var colorBarWidth = 200,
     colorBarHeight = 100;
 
 var projection = d3.geo.mercator()
@@ -244,6 +242,14 @@ function get_xyz(d) {
 }
 
 function country_clicked(d) {
+  if(!d) {
+    if(!($("#rh-panel").hasClass("closed"))){
+      $("#rh-panel").empty();
+      $("#rh-panel").append("<div id='rh-panel-header'>" + "<h3 style='padding-left:25%'><span style='margin-left:10%'><i class='fa fa-bars toggle-icon'></i><br></h3><br>" + "</div>");
+      $("#rh-panel").animate({"width": "50px"},500);
+      $("#rh-panel").addClass("closed");
+    } 
+  }
   g.selectAll(["#states", "#cities"]).remove();
   state = null;
 
@@ -256,7 +262,7 @@ function country_clicked(d) {
     country = d;
 
     if (d.id  == 'USA' ) {
-      d3.json("json/states_" + d.id.toLowerCase() + ".topo.json", function(error, us) {
+    /*  d3.json("json/states_" + d.id.toLowerCase() + ".topo.json", function(error, us) {
         g.append("g")
           .attr("id", "states")
           .selectAll("path")
@@ -270,7 +276,7 @@ function country_clicked(d) {
 
         zoom(xyz);
         g.selectAll("#" + d.id).style('display', 'none');
-      });      
+      }); */     
     } else {
       //zoom(xyz); -- for now, disable zoom on all countries but the US
     }
@@ -369,10 +375,10 @@ function getAuthorData(results,ctry) {
       + "<h8>COAUTHORSHIPS<br><br></h8><ul><li>Total: <span id='count'>" + getCoauthors(ctry) + "</span></li></ul>"
       + "</div>"
       + "<div id='article-info'>"
-      + "<h8>Top 3 External Organizations<br><br></h8><ul><li>" + (Object.keys(institutionCount))[0] + " <span id='count'>" + institutionCount[(Object.keys(institutionCount))[0]] + "</span></li><li>" + (Object.keys(institutionCount))[1] + " <span id='count'>" + institutionCount[(Object.keys(institutionCount))[1]] + "</span></li><li>" + (Object.keys(institutionCount))[2] + " <span id='count'>" + institutionCount[(Object.keys(institutionCount))[2]] + "</span></li></ul>"
+      + "<h8>Featured External Organizations<br><br></h8><ul><li>" + (Object.keys(institutionCount))[0] + "</li><li>" + (Object.keys(institutionCount))[1] + "</li><li>" + (Object.keys(institutionCount))[2] + "</li></ul>"
       + "</div>"
       + "<div id='article-info'>"
-      + "<h8>Top 3 Cornell Authors<br><br></h8><ul><li>" + (Object.keys(authorCount))[0] + " <span id='count'>" + authorCount[(Object.keys(authorCount))[0]] + "</span></li><li>" + (Object.keys(authorCount))[1] + " <span id='count'>" + authorCount[(Object.keys(authorCount))[1]] + "</span><li>" + (Object.keys(authorCount))[2] + " <span id='count'>" + authorCount[(Object.keys(authorCount))[2]] + "</span></li></ul>"
+      + "<h8>Featured Cornell Authors<br><br></h8><ul><li>" + (Object.keys(authorCount))[0] + "</li><li>" + (Object.keys(authorCount))[1] + "<li>" + (Object.keys(authorCount))[2] + "</li></ul>"
       + "</div>"
       + "<div id='article-info'>"
       + "<h8>Last Co-authorship Year: <span id='count'>" + latestPublicationYear + "</span></h8>"

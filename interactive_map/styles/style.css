@@ -4,12 +4,44 @@ html {
 h3 {
   font-size: 25px;
 }
+
+.header {
+  font-size: 40px;
+  margin-top: 5%;
+  margin-left: 3% !important;
+  font-family: Raleway;
+  font-weight: 800;
+}
+.radio-buttons {
+  margin-top: 2%;
+  margin-left: 20%;
+}
+
+
+input[type="text"], [type="date"], [type="number"] {
+    float:right;
+    margin-right: 10px;
+}
+select {
+    float:right;
+    min-width:156px;
+    margin-right: 10px;
+}
+input[type="radio"] {
+    margin-left:10px;
+}
+.clearBoth {
+    clear:both;
+}
+.currencyFloat {
+    step=0.05;
+}
+
 #map {
-/*background-color: #fff;
-border: 1px solid #ccc;*/
 margin-left: 11%;
 margin-right: 0%;
-margin-top: 6%;
+margin-top: 1%;
+margin-bottom: -5%;
 }
 .background {
 fill: none;
@@ -104,10 +136,10 @@ li {
 }
 .header {
   margin-left: 5%;
-  margin-top: 5%;
+  margin-top: 2%;
 }
 #country-selected {
-  margin-left: 5%;
+  margin-left: 2%;
   margin-top: 2%;
   padding: 0;
   margin-bottom:0;
@@ -117,7 +149,7 @@ li {
   height: 550px;
   opacity: 0.7;
   background: #222;
-  margin-top: -670px;
+  margin-top: -43%;
   float: right;
   overflow: scroll;
   padding: 10px;
@@ -126,6 +158,13 @@ li {
 #rh-panel-header {
   margin-left: -5px;
   margin-top: -10%;
+  padding: 5px;
+  background: #222;
+  color: #ddd;
+}
+#rh-panel-header-closed {
+  margin-left: 15%;
+  margin-top: -40%;
   padding: 5px;
   background: #222;
   color: #ddd;

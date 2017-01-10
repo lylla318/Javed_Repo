@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $This file is distributed under the terms of the license in /doc/license.txt$ -->
+
+<!-- See guidelines in vitro/doc/list_view_configuration_guidelines.txt -->
+
+<list-view-config>
+    <query-select>    
+        PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+        PREFIX core: &lt;http://vivoweb.org/ontology/core#&gt;
+        PREFIX afn:  &lt;http://jena.hpl.hp.com/ARQ/function#&gt;
+        PREFIX vitro: &lt;http://vitro.mannlib.cornell.edu/ns/vitro/0.7#&gt;
+        PREFIX hr: &lt;http://scholars.cornell.edu/ontology/hr.owl#&gt;
+        PREFIX obo:   &lt;http://purl.obolibrary.org/obo/&gt;
+        PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+       
+        SELECT DISTINCT <collated>?subclass</collated> 
+                        ?position
+                        ?positionTitle    
+                        ?hrJobTitle  
+                        ?rank                  
+                        ?org ?orgName 
+                        ?middleOrg ?middleOrgName
+						?posnInUnit ?posnInUnitName
+                        ?outerOrg ?outerOrgName
+                        ?dateTimeStart ?dateTimeEnd WHERE {
+            ?subject ?property ?position 
+            OPTIONAL { ?position core:relates ?org .
+                       ?org rdfs:label ?orgName 
+                        OPTIONAL { ?position hr:positionInUnit ?posnInUnit .
+                                  ?posnInUnit rdfs:label ?posnInUnitName
+                       }
+            }
+            OPTIONAL { ?position rdfs:label ?positionTitle } 
+            OPTIONAL { ?position core:hrJobTitle ?hrJobTitle }
+            OPTIONAL { ?position core:rank ?rank }
+            OPTIONAL { ?position core:dateTimeInterval ?dateTimeInterval 
+                       OPTIONAL { ?dateTimeInterval core:start ?dateTimeStartValue .                     
+                                  ?dateTimeStartValue core:dateTime ?dateTimeStart 
+                       }
+                       OPTIONAL { ?dateTimeInterval core:end ?dateTimeEndValue .   
+                                  ?dateTimeEndValue core:dateTime ?dateTimeEnd  
+                       }
+            }
+            <collated>
+            OPTIONAL { ?position vitro:mostSpecificType ?subclass .
+                       ?subclass rdfs:subClassOf core:Position 
+            } 
+            </collated>
+            <critical-data-required>
+            FILTER ( bound(?org) )
+            </critical-data-required>
+        } ORDER BY <collated>?subclass</collated> DESC(?dateTimeEnd) ?rank 
+        
+    </query-select>
+       
+    <query-construct>
+        PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;  
+        PREFIX core: &lt;http://vivoweb.org/ontology/core#&gt;
+        PREFIX vitro: &lt;http://vitro.mannlib.cornell.edu/ns/vitro/0.7#&gt;  
+        CONSTRUCT {
+            ?subject ?property ?position .
+            ?position vitro:mostSpecificType ?subclass .
+            ?subclass rdfs:subClassOf core:Position 
+        } WHERE {
+            ?subject ?property ?position .
+            ?position a core:Position .
+            ?position vitro:mostSpecificType ?subclass .
+            ?subclass rdfs:subClassOf core:Position 
+        }
+    </query-construct>
+    
+    <query-construct>
+        PREFIX core: &lt;http://vivoweb.org/ontology/core#&gt;
+        PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;    
+        PREFIX hr: &lt;http://scholars.cornell.edu/ontology/hr.owl#&gt;
+        PREFIX obo:   &lt;http://purl.obolibrary.org/obo/&gt;
+        PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+        CONSTRUCT { 
+            ?subject ?property ?position .
+			?position rdfs:label ?positionTitle . 
+			?position core:hrJobTitle ?hrJobTitle .
+			?position core:rank ?rank .
+			?position core:relates ?org .
+            ?org rdfs:label ?orgName .
+            ?position hr:positionInUnit ?posnInUnit .
+            ?posnInUnit rdfs:label ?posnInUnitName .
+        } WHERE {
+            {
+               ?subject ?property ?position .
+               ?position a core:Position .
+            } UNION {
+               ?subject ?property ?position .
+               ?position a core:Position .
+               ?position rdfs:label ?positionTitle .
+            } UNION {
+               ?subject ?property ?position .
+               ?position a core:Position .
+               ?position core:hrJobTitle ?hrJobTitle . 
+            } UNION {
+               ?subject ?property ?position .
+               ?position a core:Position .
+               ?position core:rank ?rank 
+            } UNION {
+               ?subject ?property ?position .
+               ?position a core:Position .
+               ?position core:relates ?org .
+               ?org a foaf:Organization . 
+               ?org rdfs:label ?orgName 
+            } UNION {
+                ?subject ?property ?position .
+                ?position a core:Position .
+                ?position hr:positionInUnit ?posnInUnit .
+                ?posnInUnit a foaf:Organization .
+ 				?posnInUnit rdfs:label ?posnInUnitName
+            }
+
+        } 
+    </query-construct>
+    
+    <query-construct>
+        PREFIX core: &lt;http://vivoweb.org/ontology/core#&gt;   
+        CONSTRUCT { 
+            ?subject ?property ?position .  
+            ?position core:dateTimeInterval ?dateTimeInterval .
+            ?dateTimeInterval core:start ?dateTimeStartValue .
+            ?dateTimeStartValue core:dateTime ?dateTimeStart 
+        } WHERE {
+            ?subject ?property ?position .  
+            ?position a core:Position .
+            ?position core:dateTimeInterval ?dateTimeInterval .
+            ?dateTimeInterval core:start ?dateTimeStartValue .
+            ?dateTimeStartValue core:dateTime ?dateTimeStart 
+        } 
+    </query-construct>
+
+    <query-construct>
+        PREFIX core: &lt;http://vivoweb.org/ontology/core#&gt;    
+        CONSTRUCT { 
+            ?subject ?property ?position .  
+            ?position core:dateTimeInterval ?dateTimeInterval .
+            ?dateTimeInterval core:end ?dateTimeEndValue .
+            ?dateTimeEndValue core:dateTime ?dateTimeEnd 
+        } WHERE {
+            ?subject ?property ?position . 
+            ?position a core:Position . 
+            ?position core:dateTimeInterval ?dateTimeInterval .
+            ?dateTimeInterval core:end ?dateTimeEndValue .
+            ?dateTimeEndValue core:dateTime ?dateTimeEnd 
+        } 
+    </query-construct>
+              
+    <template>propStatement-personInPosition.ftl</template>
+</list-view-config>

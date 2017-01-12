@@ -6,11 +6,13 @@ var selectColor = "#9999cc",
 
     currentMap = "world",
 
-    currentColorScheme = "warm";
-
-    tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden"),
+    currentColorScheme = "warm",
 
     clicked = false,
+
+    worldData = {},
+  
+    usaData = {},
 
     noCoauthors = [];
 
@@ -21,83 +23,112 @@ for (var i=0 ; i < (Object.keys(sample_data)).length ; i++) {
 noCoauthors.sort(function(a, b){return a-b});
 
 $(document).ready(function(){
-    $("input:radio[name=editList]").click(function() {
-        var value = $(this).val();
-        if(value == "world" && currentMap != "world") {
-          drawWorld();
+
+  d3.json("data/external-2017-1-3.json", function(error, results) {
+    var keys = Object.keys(sample_data);
+    for (var i = 0 ; i < keys.length ; i++) {
+      sample_data[keys[i]].coauthors = 0;
+    }
+    for(var i = 0 ; i < results.length ; i++) {
+      var authors = results[i].authors;
+      for(var j = 0 ; j < authors.length ; j++) {
+        if(authors[j].state) {
+          var state = authors[j].state;
+          if(usaData[state]) {
+            (usaData[state]).coauthors = (usaData[state]).coauthors + 1;
+          } else {
+            usaData[state] = {"coauthors": 1};
+          }
         } else {
-          drawUSA();
+          if(authors[j].country) {
+            var country = ((authors[j].country).toLowerCase()).trim();
+            country = capitalizeFirstLetter(country);
+            if(sample_data[country]) {
+              sample_data[country].coauthors = sample_data[country].coauthors + 1;
+            }
+          }
         }
-    });
-
-    $("#rh-panel").hide();
-
-    $("#rh-panel").click(function(e){
-      e.preventDefault();
-      /* If rh-panel is open, minimize it. */
-      if(!($("#rh-panel").hasClass("closed"))){
-        $("#rh-panel").empty();
-        $("#rh-panel").append("<div id='rh-panel-header-closed'><h3><i class='fa fa-bars toggle-icon'></i></h3></div>");
-        $("#rh-panel").animate({"width": "50px"},500);
-        $("#rh-panel").addClass("closed");
       }
-      /* Enlarge the rh-panel */
-      else {
-        d3.json("data/external-2017-1-3.json", function(error, results) {
-          getAuthorData(results, current);
-        });
-        $("#rh-panel").animate({"width": "250px"},500);
-        $("#rh-panel").removeClass("closed");
-      }
-    });
+    }
+  });
 
-    $("#colorButton").click(function(){
-      if(currentColorScheme == "cold") {
-        currentColorScheme = "warm";
-        colors = warmColorScheme;
-        colorMap = warmColorMap;
+  $("input:radio[name=editList]").click(function() {
+      var value = $(this).val();
+      if(value == "world" && currentMap != "world") {
+        drawWorld();
       } else {
-        currentColorScheme = "cold";
-        colors = coldColorScheme;
-        colorMap = coldColorMap;
+        drawUSA();
       }
+  });
 
-      d3.selectAll(".ctry").style("fill", function(d){
-        if(sample_data[d.properties.name]) {
-          var numCoauthors = (sample_data[d.properties.name]).coauthors;
-          return getFill(numCoauthors, noCoauthors,colors);
-        } else {
-          return getFill(0, noCoauthors,colors);
-        }
+  $("#rh-panel").hide();
+
+  $("#rh-panel").click(function(e){
+    e.preventDefault();
+    /* If rh-panel is open, minimize it. */
+    if(!($("#rh-panel").hasClass("closed"))){
+      $("#rh-panel").empty();
+      $("#rh-panel").append("<div id='rh-panel-header-closed'><h3><i class='fa fa-bars toggle-icon'></i></h3></div>");
+      $("#rh-panel").animate({"width": "50px"},500);
+      $("#rh-panel").addClass("closed");
+    }
+    /* Enlarge the rh-panel */
+    else {
+      d3.json("data/external-2017-1-3.json", function(error, results) {
+        getAuthorData(results, current);
       });
+      $("#rh-panel").animate({"width": "250px"},500);
+      $("#rh-panel").removeClass("closed");
+    }
+  });
 
-      $(".legend").remove();
+  $("#colorButton").click(function(){
+    if(currentColorScheme == "cold") {
+      currentColorScheme = "warm";
+      colors = warmColorScheme;
+      colorMap = warmColorMap;
+    } else {
+      currentColorScheme = "cold";
+      colors = coldColorScheme;
+      colorMap = coldColorMap;
+    }
 
-      var legend = z.selectAll(".legend")
-      .data(["0", "50", "100", "150", "200", "250", "300", "350", "351+"])
-      .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { 
-          return "translate(" + i * 2 + "0)"; })
-        .style("font", "8px sans-serif");
-
-      legend.append("rect")
-        .attr("class","legend-box")
-        .attr("x", width - 15)
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("fill", function(d){ return colorMap[d]; });
-
-      legend.append("text")
-        .attr("x", width-10)
-        .attr("y", 30)
-        .attr("dy", ".35em")
-        .attr("text-anchor", "center")
-        .attr("class", "legend-text")
-        .style("fill", "#0A0A0A")
-        .text(function(d) { return d; });
-
+    d3.selectAll(".ctry").style("fill", function(d){
+      if(sample_data[d.properties.name]) {
+        var numCoauthors = (sample_data[d.properties.name]).coauthors;
+        return getFill(numCoauthors, noCoauthors,colors);
+      } else {
+        return getFill(0, noCoauthors,colors);
+      }
     });
+
+    $(".legend").remove();
+
+    var legend = z.selectAll(".legend")
+    .data(["0", "50", "100", "150", "200", "250", "300", "350", "351+"])
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { 
+        return "translate(" + i * 2 + "0)"; })
+      .style("font", "8px sans-serif");
+
+    legend.append("rect")
+      .attr("class","legend-box")
+      .attr("x", width - 15)
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("fill", function(d){ return colorMap[d]; });
+
+    legend.append("text")
+      .attr("x", width-10)
+      .attr("y", 30)
+      .attr("dy", ".35em")
+      .attr("text-anchor", "center")
+      .attr("class", "legend-text")
+      .style("fill", "#0A0A0A")
+      .text(function(d) { return d; });
+
+  });
 });
 
 var colors = ['#fed976','#ffcc33','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026'],
@@ -159,6 +190,8 @@ drawWorld();
 function drawWorld() {
   $("#map").empty();
 
+  var tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden"),
+
   currentMap = "world";
 
   var country, state;
@@ -185,9 +218,9 @@ function drawWorld() {
 
   var g = svg.append("g");
 
-  var offsetL = document.getElementById('map').offsetLeft+(width/2)-300;
+  var offsetL = document.getElementById('map').offsetLeft+(width/2.5);
 
-  var offsetT = document.getElementById('map').offsetTop+(height/2)-130;
+  var offsetT = document.getElementById('map').offsetTop+(height/2.5);
 
   d3.json("json/countries.topo.json", function(error, us) {
     g.append("g")
@@ -312,35 +345,27 @@ function drawUSA() {
     .attr("width", m_width)
     .attr("height", m_width * height / width);
 
+  var g = svg.append("g");
+
   svg.append("rect")
     .attr("class", "background")
     .attr("id", "background")
     .attr("width", width)
     .attr("height", height);
 
-  d3.json("json/us.json", function(error, us) {
-    if (error) throw error;
-
-    svg.insert("path", ".graticule")
-        .datum(topojson.feature(us, us.objects.land))
-        .attr("class", "land")
-        .attr("d", path)
-        .style("fill","none")
-        .style("stroke","black");
-
-    svg.insert("path", ".graticule")
-        .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b && !(a.id / 1000 ^ b.id / 1000); }))
-        .attr("class", "county-boundary")
-        .attr("d", path)
-        .style("fill","none")
-        .style("stroke","none");
-
-    svg.insert("path", ".graticule")
-        .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-        .attr("class", "state-boundary")
-        .attr("d", path)
-        .style("fill","none")
-        .style("stroke","black");
+   d3.json("json/us-states.json", function(error, us) {
+    g.append("g")
+      .attr("id", "state")
+      .selectAll("path")
+      .data(us.features)
+      .enter()
+      .append("path")
+      .attr("id", function(d) { 
+        return d.id; })
+      .attr("class", "ctry")
+      .attr("d", path)
+      .style("stroke","black")
+      .style("fill", "none");
   });
 
   d3.select(self.frameElement).style("height", height + "px");
@@ -411,7 +436,7 @@ function getAuthorData(results,ctry) {
 
 function getCoauthors(name) {
   if(sample_data[name]) { 
-    return (sample_data[name]).coauthors;
+    return (sample_data[name].coauthors);
   } else {
     return 0; 
   }
@@ -441,6 +466,10 @@ function contains(a, obj) {
        }
     }
     return false;
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function hasClass(element, cls) {

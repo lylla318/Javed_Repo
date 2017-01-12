@@ -16,6 +16,16 @@ var selectColor = "#9999cc",
 
     noCoauthors = [];
 
+var stateHashMap = {"Hawaii":"HI", "Alaska":"AK", "Florida":"FL", "South Carolina":"SC", "Georgia":"GA", "Alabama":"AL", 
+        "North Carolina":"NC", "Tennessee":"TN", "Rhode Island":"RI", "Connecticut":"CT", "Massachusetts":"MA",
+        "Maine":"ME", "New Hampshire":"NH", "Vermont":"VT", "New York":"NY", "New Jersey":"NJ", "Pennsylvania":"PA", 
+        "Delaware":"DE", "Maryland":"MD", "West Virginia":"WV", "Kentucky":"KY", "Ohio":"OH", "Michigan":"MI", 
+        "Wyoming":"WY", "Montana":"MT", "Idaho":"ID", "Washington":"WA", "District of Columbia":"DC", "Texas":"TX", "California":"CA", 
+        "Arizona":"AZ", "Nevada":"NV", "Utah":"UT", "Colorado":"CO", "New Mexico":"NM", "Oregon":"OR", "North Dakota":"ND", 
+        "South Dakota":"SD", "Nebraska":"NE", "Iowa":"IA", "Mississippi":"MS", "Indiana":"IN", "Illinois":"IL", "Minnesota": "MN", 
+        "Wisconsin":"WI", "Missouri":"MO", "Arkansas":"AR", "Oklahoma":"OK", "Kansas":"KS", "Louisiana":"LA", "Virginia":"VA", "Puerto Rico":"PR"};
+
+
 for (var i=0 ; i < (Object.keys(sample_data)).length ; i++) {
   noCoauthors.push( sample_data[(Object.keys(sample_data))[i]].coauthors);
 }
@@ -353,6 +363,8 @@ function drawUSA() {
     .attr("width", width)
     .attr("height", height);
 
+  console.log(usaData);
+
    d3.json("json/us-states.json", function(error, us) {
     g.append("g")
       .attr("id", "state")
@@ -360,12 +372,19 @@ function drawUSA() {
       .data(us.features)
       .enter()
       .append("path")
-      .attr("id", function(d) { 
-        return d.id; })
+      .attr("id", function(d) { return d.id; })
       .attr("class", "ctry")
       .attr("d", path)
       .style("stroke","black")
-      .style("fill", "none");
+      .style("fill", function(d, i) {
+        var abbrev = stateHashMap[d.properties.name];
+        if(usaData[abbrev]) {
+          var numCoauthors = (usaData[abbrev]).coauthors;
+          return getFill(numCoauthors, noCoauthors,colors);
+        } else {
+          return getFill(0, noCoauthors,colors);
+        }
+      });
   });
 
   d3.select(self.frameElement).style("height", height + "px");
@@ -446,6 +465,7 @@ function getFill(num, arr, colors) {
   var range = (arr[arr.length-1] / colors.length);
   if(num == 0) {return "#ddd"; }
   if(num >= 0 && num <= range) { return colors[0]; }
+  if(num >= 350) { return colors[7] }
   for (var i = 1 ; i < (parseInt(range) + 1) ; i++) {
     if (num >= (range * i) && num <= (range * (i + 1))) { return colors[i]; }
   }

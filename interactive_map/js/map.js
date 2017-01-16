@@ -109,14 +109,27 @@ $(document).ready(function(){
       colorMap = coldColorMap;
     }
 
-    d3.selectAll(".ctry").style("fill", function(d){
-      if(sample_data[d.properties.name]) {
-        var numCoauthors = (sample_data[d.properties.name]).coauthors;
-        return getFill(numCoauthors, noCoauthors,colors);
-      } else {
-        return getFill(0, noCoauthors,colors);
-      }
-    });
+    if(worldMap) {
+      d3.selectAll(".ctry").style("fill", function(d){
+        if(sample_data[d.properties.name]) {
+          var numCoauthors = (sample_data[d.properties.name]).coauthors;
+          return getFill(numCoauthors, noCoauthors,colors);
+        } else {
+          return getFill(0, noCoauthors,colors);
+        }
+      });
+    } else {
+      d3.selectAll(".state").style("fill", function(d){
+        var abbrev = stateHashMap[d.properties.name];
+          if(usaData[abbrev]) {
+            var numCoauthors = (usaData[abbrev]).coauthors;
+            return getFill(numCoauthors, noCoauthors,colors);
+          } else {
+            return getFill(0, noCoauthors,colors);
+          }
+      });
+    }
+    
 
     $(".legend").remove();
 
@@ -393,7 +406,7 @@ function drawUSA() {
       .enter()
       .append("path")
       .attr("id", function(d) { return d.id; })
-      .attr("class", "ctry")
+      .attr("class", "state")
       .attr("d", path)
       .style("stroke","black")
       .style("fill", function(d, i) {

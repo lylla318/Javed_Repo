@@ -1,19 +1,20 @@
 html {
   font-family: sans-serif;
+  overflow: hidden;
 }
 h3 {
   font-size: 25px;
 }
 
 .header {
-  font-size: 40px;
+  font-size: 35px;
   margin-top: 5%;
-  margin-left: 3% !important;
+  margin-left: 0% !important;
   font-family: Raleway;
   font-weight: 800;
 }
 .radio-buttons {
-  margin-top: 2%;
+  margin-top: 1%;
   margin-left: 20%;
 }
 
@@ -21,6 +22,7 @@ h3 {
 input[type="text"], [type="date"], [type="number"] {
     float:right;
     margin-right: 10px;
+    margin-left: 10px;
 }
 select {
     float:right;
@@ -68,9 +70,6 @@ border: 1px solid #ccc;
 margin-bottom: 0;
 padding: 9.5px;
 }
-
-
-
 .country:hover{
   stroke: #fff;
   stroke-width: .7px;
@@ -108,6 +107,7 @@ li {
   margin:100px 10%;
   border: solid 1px black;
   padding: 10px;
+  height: 25px;
 } .mini-submenu{
   display:none;  
   background-color: rgba(0, 0, 0, 0);  
@@ -136,7 +136,7 @@ li {
 }
 .header {
   margin-left: 5%;
-  margin-top: 2%;
+  margin-top: 1%;
 }
 #country-selected {
   margin-left: 2%;
@@ -151,26 +151,25 @@ li {
   background: #222;
   margin-top: -43%;
   float: right;
-  overflow: scroll;
+  overflow: none;
   padding: 10px;
   color: #ddd;
 }
 #rh-panel-header {
-  margin-left: -5px;
-  margin-top: -10%;
-  padding: 5px;
+  margin-left: 5px;
+  margin-top: -4%;
+  padding: 0px;
   background: #222;
   color: #ddd;
 }
 #rh-panel-header-closed {
   margin-left: 15%;
-  margin-top: -40%;
   padding: 5px;
   background: #222;
   color: #ddd;
 }
 #rh-panel-header hr {
- margin-top: -5;
+ margin-top: 5%;
  border-style: none;
  height: 2px;
  width: 100%;
@@ -184,15 +183,14 @@ li {
 #lh-panel {
   width: 250px;
   height: 500px;
-  margin-top: -670px;
+  margin-top: -43%;
   float: left;
-  overflow: scroll;
+  overflow: hidden;
   padding: 10px;
   color: #ddd;
 }
 #lh-panel-header {
   padding: 5px;
-  /*background: #222;*/
   color: #ddd;
 }
 #article-info {
@@ -208,7 +206,7 @@ li {
   font-style: italic;
   color: white;
 }
-#articlel-info li {
+#article-info li {
   list-style: none;
 }
 .toggle-icon{
@@ -220,23 +218,71 @@ li {
   float: right;
 }
 #colorBar {
-  margin-top: 80%;
-  margin-left: 5%;
+  margin-top: 10%;
+  margin-left: 0%;
 }
 #colorButton {
-  width: 150px;
-  height: 25px;
-  margin-left: 15%;
-  border: 2px solid #ddd;
-  font-size: 12px;
-  padding-top: 10px;
-  text-align: center;
-  color: #A9A9A9;
-  cursor: pointer;
+  width: 150px !important;
+  height: 45px ;
+  margin-left: 10% !important;
+  border: 2px solid #ddd !important;
+  font-size: 12px !important;
+  padding-top: 10px !important;
+  text-align: center !important;
+  color: black !important;
+  cursor: pointer !important;
 }
 #colorButton:hover{
-  color: black;
+  border: 2px solid black !important;
 }
 
+.row{
+  margin-top: 1%;
+  margin-left: 30%;
+  max-width: 100%;
+}
+.panel-group{
+  padding-left: 5%;
+}
+
+.panel-body{
+  padding-top: 2px;
+  padding-bottom: 2px;
+  max-height: 300px;
+  overflow-y: scroll;
+  min-height: 100px;
+}
+
+.start{
+  color: gray;
+}
+
+#range{
+  margin-top: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.noUi-connect{
+  background: #d3d3d3;
+}
+
+.noUi-value-large{
+  font-size: 10pt;
+  margin-top: 5px;
+}
+
+.col-md-9{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.radio-text {
+  padding-left: 2px;
+}
+
+/*.panel-heading {
+  height: 30px !important;
+}*/
 
 

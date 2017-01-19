@@ -327,7 +327,7 @@ function drawWorld() {
         var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
         tooltip
           .classed("hidden", false)
-          .attr("style", "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
+          .attr("style", "left:"+(mouse[0]+300/*+offsetL*/)+"px;top:"+(mouse[1]+200/*+offsetT*/)+"px")
           .html(d.properties.name + "<br>" + "Co-authorships: " + getCoauthors(d.properties.name))
       })
       .on("mouseout",  function(d,i) {
@@ -477,7 +477,7 @@ function drawUSA() {
         var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
         tooltip
           .classed("hidden", false)
-          .attr("style", "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
+          .attr("style", "left:"+(mouse[0]+300/*offsetL*/)+"px;top:"+(mouse[1]+200/*+offsetT*/)+"px")
           .html(d.properties.name + "<br>" + "Co-authorships: " + (usaData[abbrev]).coauthors)
       })
       .on("mouseout",  function(d,i) {
